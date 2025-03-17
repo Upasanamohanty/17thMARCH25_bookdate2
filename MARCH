@@ -1,0 +1,45 @@
+import React, { useState } from 'react';
+
+const Calendar2025: React.FC = () => {
+    const [currentMonth, setCurrentMonth] = useState(3); // Starting from March
+
+    const months = ['March', 'April', 'May'];
+    const weekDays = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+
+    const getDaysInMonth = (month: number) => {
+        const daysInMonth = [31, 30, 31]; // March, April, May 2025
+        const firstDayOffset = [5, 1, 3]; // March starts on Saturday, April on Tuesday, May on Thursday
+        const emptyDays = Array(firstDayOffset[month - 3]).fill('');
+        const days = Array.from({ length: daysInMonth[month - 3] }, (_, i) => i + 1);
+        return [...emptyDays, ...days];
+    };
+
+    const renderCalendar = () => {
+        const days = getDaysInMonth(currentMonth);
+        return (
+            <div className="calendarContainer">
+                <div className="header">
+                    <button onClick={() => setCurrentMonth((prev) => Math.max(prev - 1, 3))}>&lt;</button>
+                    <h2>{months[currentMonth - 3]}</h2>
+                    <button onClick={() => setCurrentMonth((prev) => Math.min(prev + 1, 5))}>&gt;</button>
+                </div>
+                <div className="weekDaysRow" style={{ display: 'flex', justifyContent: 'space-around', fontWeight: 'bold' }}>
+                    {weekDays.map((day, index) => (
+                        <div key={index} className="weekDay" style={{ width: '40px', textAlign: 'center' }}>{day}</div>
+                    ))}
+                </div>
+                <div className="daysGrid" style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)' }}>
+                    {days.map((day, index) => (
+                        <div key={index} className={`dayBox ${day === '' ? 'emptyDay' : ''}`} style={{ padding: '5px', textAlign: 'center' }}>
+                            {day}
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+    };
+
+    return <div>{renderCalendar()}</div>;
+};
+
+export default Calendar2025;
